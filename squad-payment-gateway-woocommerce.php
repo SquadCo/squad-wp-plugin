@@ -5,7 +5,7 @@
  * Author: Squad Developers
  * Author URI: http://squadco.com/
  * Description: Provides Seamless Payments with Debit/Credit Cards.
- * Version: 1.0.2
+ * Version: 1.0.5
  * License: GPL2
  * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
  * text-domain: squad-payments-woo

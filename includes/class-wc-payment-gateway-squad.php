@@ -277,8 +277,6 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 				$squad_params['webhook_url']  = $this->webhook_url;
 				$squad_params['payment_options']  = $this->payment_options;
 				$squad_params['currency']     = get_woocommerce_currency();
-				$squad_params['bank_channel'] = 'true';
-				$squad_params['card_channel'] = 'true';
 			}
 
 			if ( $this->custom_metadata ) {
@@ -435,7 +433,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 	/**
 	 * Output for the order received page.
 	 */
-	public function thankyou_page() {
+	public function thankyou_page($orderid) {
 		if ( $this->instructions ) {
 			echo wp_kses_post( wpautop( wptexturize( $this->instructions ) ) );
 			return;
@@ -474,9 +472,8 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 
 		@ob_clean();
 		if ( $squad_txn_ref ) {
-
-			$squad_verify_url = "https://qa-api.squadinc.co/payment/TransactionHistory/UniqueTransaction?transaction_ref=${squad_txn_ref}";
-
+			$squad_verify_url =	"https://qa-api.squadinc.co/transaction/verify/${squad_txn_ref}";
+			
 			$headers = array(
 				'Authorization' => 'Bearer ' . $this->secret_key,
 			);
@@ -487,38 +484,40 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 			); 
 
 			$request = wp_remote_get( $squad_verify_url, $args );
-
+			
+			var_dump($request);
+			exit();
+			
 			if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
 
 				$squad_response = json_decode( wp_remote_retrieve_body( $request ) );
 
-				$success = $squad_response->data->status;
-				$success = true;//temp-> to be removed later!
+				$transStatus = $squad_response->data->transaction_status;
+				$success = $transStatus=="Success"?true:false;
 
 				if ( $success ) {
 
-					$order_details = explode( '_', $squad_response->data->reference );
-					$order_details = explode( '_', $squad_txn_ref );// to be removed later
-					$order_id      = (int) $order_details[1];
+					$transaction_ref = $squad_response->data->transaction_ref;
+					$order_details = explode( 'T', $transaction_ref );
+					$order_id      = (int) str_replace('WOO','',$order_details[0]);
+
 					$order         = wc_get_order( $order_id );
 
 					if ( in_array( $order->get_status(), array( 'processing', 'completed', 'on-hold' ) ) ) {
-
 						wp_redirect( $this->get_return_url( $order ) );
 
 						exit;
 					}
 
-					$order_total      = $order->get_total();
+					
+					$order_total      = (float) $order->get_total();
 					$order_currency   = method_exists( $order, 'get_currency' ) ? $order->get_currency() : $order->get_order_currency();
 					$currency_symbol  = get_woocommerce_currency_symbol( $order_currency );
-					$amount_paid      = $squad_response->data->amount / 100;
-					$amount_paid      = $order_total; // to be removed later
-					$squad_ref     = $squad_response->data->reference;
-					$squad_ref     = $squad_txn_ref; // to be removed later
-					$payment_currency = strtoupper( $squad_response->data->currency );
-					$payment_currency = $currency_symbol; // to be removed later
+					$amount_paid      = $squad_response->data->transaction_amount / 100;
+					$squad_ref     = $transaction_ref;
+					$payment_currency = strtoupper( $squad_response->data->transaction_currency_id );
 					$gateway_symbol   = get_woocommerce_currency_symbol( $payment_currency );
+
 
 					// check if the amount paid is equal to the order amount.
 					if ( $amount_paid < $order_total ) {
@@ -588,6 +587,17 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 				}
 			}
 
+			if(!empty($this->webhook_url)){
+				$body = $this->getOrderMeta($order_id, $amount_paid, $squad_ref);
+
+				$data = wp_remote_post($this->webhook_url, array(
+					'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
+					'body'        => json_encode($body),
+					'method'      => 'POST',
+					'data_format' => 'body',
+				));
+			}
+
 			wp_redirect( $this->get_return_url( $order ) );
 
 			exit;
@@ -596,6 +606,87 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 		wp_redirect( wc_get_page_permalink( 'cart' ) );
 
 		exit;
+	}
+
+	protected function getOrderMeta($order_id, $amount, $txnref){
+		$order_params = [];
+		$order         = wc_get_order( $order_id );
+
+		$email         	= method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : $order->billing_email;
+
+		$order_params['customer_email']        = $email;
+		$order_params['amount']       = $amount;
+		$order_params['order_id']     = $order_id;
+		$order_params['txnref']       = $txnref;
+		$order_params['currency']     = get_woocommerce_currency();
+
+		//include name
+		$first_name = method_exists( $order, 'get_billing_first_name' ) ? $order->get_billing_first_name() : $order->billing_first_name;
+		$last_name  = method_exists( $order, 'get_billing_last_name' ) ? $order->get_billing_last_name() : $order->billing_last_name;
+
+		$order_params['customer_name'] = $first_name . ' ' . $last_name;
+
+		//Include phone
+		$billing_phone = method_exists( $order, 'get_billing_phone' ) ? $order->get_billing_phone() : $order->billing_phone;
+		$order_params['customer_phone'] = $billing_phone;
+
+		//Include products
+		$line_items = $order->get_items();
+		$products = [];
+
+		foreach ( $line_items as $item_id => $item ) {
+			$name      = $item['name'];
+			$quantity  = $item['qty'];
+			$product_id  = $item['product_id'];
+			$quantity  = $item['qty'];
+
+			// get product_tags of the current product
+			$current_tags = get_the_terms( $product_id, 'product_tag' );
+			$tags = [];
+			if ( $current_tags && ! is_wp_error( $current_tags ) ) { 
+
+				foreach ($current_tags as $tag) {
+					$tag_title = $tag->name; // tag name
+					$tag_id = $tag->term_id; // tag id
+					$tag_link = get_term_link( $tag );// tag archive link
+
+					$newTag = [
+						"tag_title" => $tag_title,
+						"tag_id" => $tag_id,
+						"tag_link" => $tag_link,
+					];
+					array_push($tags, $newTag);
+				}
+			}
+			$newElement = [
+				"Name" => $name,
+				"Qty" => $quantity,
+				"PiD" => $product_id,
+				"tags" => $tags,
+			];
+			array_push($products, $newElement);
+		}
+		$order_params['products'] = $products;
+
+		//--> Billing address
+		$billing_address = $order->get_formatted_billing_address();
+		$billing_address = esc_html( preg_replace( '#<br\s*/?>#i', ', ', $billing_address ) );
+		$order_params['customer_billing_address'] = $billing_address;
+
+		//--> Shipping address
+		$shipping_address = $order->get_formatted_shipping_address();
+		$shipping_address = esc_html( preg_replace( '#<br\s*/?>#i', ', ', $shipping_address ) );
+
+		if ( empty( $shipping_address ) ) {
+			$billing_address = $order->get_formatted_billing_address();
+			$billing_address = esc_html( preg_replace( '#<br\s*/?>#i', ', ', $billing_address ) );
+
+			$shipping_address = $billing_address;
+		}
+
+		$order_params['customer_shipping_address'] = $shipping_address;
+
+		return $order_params;
 	}
 
 	/**

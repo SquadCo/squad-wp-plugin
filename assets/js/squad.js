@@ -1,11 +1,12 @@
 jQuery(function ($) {
   var squad_submit = false;
 
+  //init widget on page load
   wcSquadFormHandler();
 
   jQuery("#squad-payment-button").click(function () {
-    // window.location.reload();
-    return wcSquadFormHandler();
+    window.location.reload();
+    // return wcSquadFormHandler();
   });
 
   function wcSquadFormHandler() {
@@ -26,8 +27,6 @@ jQuery(function ($) {
       order_id = wc_squad_params.order_id,
       email = wc_squad_params.email,
       meta_products = wc_squad_params.meta_products;
-
-    console.log(wc_squad_params);
 
     if (wc_squad_params.bank_channel) {
       bank = "true";
@@ -52,6 +51,12 @@ jQuery(function ($) {
     var amount = Number(wc_squad_params.amount);
 
     var successCallback = function (response) {
+      console.log("----", response);
+      console.log("----", response.transaction_amount);
+      console.log("----", response.transaction_ref);
+      console.log("----", JSON.parse(response));
+      return;
+
       //-----> 4084 0840 8408 4081
       //append 'squad_txnref' to form
       //to be picked by 'squad_verify_transaction' function
@@ -78,7 +83,6 @@ jQuery(function ($) {
         },
       });
     };
-
     const channels =
       payment_options.length == 0
         ? ["card", "transfer", "ussd", "bank"]
@@ -92,7 +96,6 @@ jQuery(function ($) {
       onLoad: () => console.log("Widget loaded successfully"),
       onSuccess: (response) => {
         successCallback(response);
-        console.log(response);
       },
       key: public_key,
       email: email,
