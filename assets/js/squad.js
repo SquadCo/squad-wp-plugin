@@ -1,11 +1,12 @@
 jQuery(function ($) {
   var squad_submit = false;
 
+  //init widget on page load
   wcSquadFormHandler();
 
   jQuery("#squad-payment-button").click(function () {
-    // window.location.reload();
-    return wcSquadFormHandler();
+    window.location.reload();
+    // return wcSquadFormHandler();
   });
 
   function wcSquadFormHandler() {
@@ -18,7 +19,6 @@ jQuery(function ($) {
 
     var $form = $("form#payment-form, form#order_review"),
       public_key = wc_squad_params.public_key,
-      amount = Number(wc_squad_params.amount),
       meta_name = wc_squad_params.meta_name,
       payment_options = wc_squad_params.payment_options,
       currency = wc_squad_params.currency,
@@ -26,8 +26,6 @@ jQuery(function ($) {
       order_id = wc_squad_params.order_id,
       email = wc_squad_params.email,
       meta_products = wc_squad_params.meta_products;
-
-    console.log(wc_squad_params);
 
     if (wc_squad_params.bank_channel) {
       bank = "true";
@@ -52,14 +50,19 @@ jQuery(function ($) {
     var amount = Number(wc_squad_params.amount);
 
     var successCallback = function (response) {
-      //-----> 4084 0840 8408 4081
-      //append 'squad_txnref' to form
-      //to be picked by 'squad_verify_transaction' function
+      let res;
+      try {
+        res = JSON.parse(response);
+      } catch (error) {
+        res = response;
+      }
+      const responseTransactionRef = res.transaction_ref;
+
       $form.append(
         `<input type="hidden" 
 				class="squad_txnref" 
 				name="squad_txnref" 
-				value="${txnref}"/>`
+				value="${responseTransactionRef}"/>`
       );
 
       $("#squad_form a").hide();
@@ -78,11 +81,8 @@ jQuery(function ($) {
         },
       });
     };
-
     const channels =
-      payment_options.length == 0
-        ? ["card", "transfer", "ussd", "bank"]
-        : payment_options;
+      payment_options.length === 0 ? ["card", "transfer", "ussd", "bank"] : payment_options;
 
     const squadInstance = new squad({
       onClose: () => {
@@ -92,12 +92,11 @@ jQuery(function ($) {
       onLoad: () => console.log("Widget loaded successfully"),
       onSuccess: (response) => {
         successCallback(response);
-        console.log(response);
       },
       key: public_key,
       email: email,
       amount: amount,
-      currency: currency,
+      currency_code: currency,
       transaction_ref: txnref,
       paymentChannel: channels,
       metadata: "",
