@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Squad Payment Gateway
- * Plugin URI: http://squadco.com/
+ * Plugin URI: https://github.com/SquadInc/squad-wp-plugin
  * Author: Squad Developers
  * Author URI: http://squadco.com/
  * Description: Provides Seamless Payments with Multiple payment options.
