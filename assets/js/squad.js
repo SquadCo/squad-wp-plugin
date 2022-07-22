@@ -56,13 +56,13 @@ jQuery(function ($) {
       } catch (error) {
         res = response;
       }
-      const respTxnref = res.transaction_ref;
+      const responseTransactionRef = res.transaction_ref;
 
       $form.append(
         `<input type="hidden" 
 				class="squad_txnref" 
 				name="squad_txnref" 
-				value="${respTxnref}"/>`
+				value="${responseTransactionRef}"/>`
       );
 
       $("#squad_form a").hide();
@@ -82,7 +82,7 @@ jQuery(function ($) {
       });
     };
     const channels =
-      payment_options.length == 0 ? ["card", "transfer", "ussd", "bank"] : payment_options;
+      payment_options.length === 0 ? ["card", "transfer", "ussd", "bank"] : payment_options;
 
     const squadInstance = new squad({
       onClose: () => {
