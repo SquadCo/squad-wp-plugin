@@ -5,7 +5,7 @@
 # WooCommerce Squad Payment Gateway
 
 - **Contributors:** Squad Developers
-- **Tags:** squad, woocommerce, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa, barter
+- **Tags:** squad, woocommerce, payment gateway, bank account, credit card, debit card, nigeria, international, mastercard, visa
 - **Requires at least:** 4.4
 - **Tested up to:** 5.6.1
 - **Stable tag:** 2.2.6
