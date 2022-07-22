@@ -24,12 +24,12 @@ Signup for an account [here](https://dashboard.squadco.com)
 Squad is available in:
 
 - **Nigeria**
-- **Ghana**
+<!-- - **Ghana**
 - **Kenya**
 - **Uganda**
 - **Tanzania**
 - **Rwanda**
-- **South Africa**
+- **South Africa** -->
 
 <!-- ## Recurring Payment Support
 For Recurring payment, you will need to install the [WooCommerce Subscriptions](https://woocommerce.com/products/woocommerce-subscriptions/) plugin. No subscription plans is created on Squad. The WooCommerce Subscriptions plugin handles all the subscription functionality. -->
@@ -90,23 +90,23 @@ To configure the plugin, go to **WooCommerce > Settings** from the left menu, cl
 
 ## Screenshots
 
-#####1. Squad WooCommerce Payment Gateway Setting Page
+##### 1. Squad WooCommerce Payment Gateway Setting Page
 
 ###
 
 ![Screenshot 1](assets/images/settings.png)
 
-#####2. Squad WooCommerce Payment Gateway on woocommerce order checkout page
+##### 2. Squad WooCommerce Payment Gateway on woocommerce order checkout page
 
 ###
 
 ![Screenshot 2](assets/images/checkout.png)
 
-#####3. Squad pay modal showing card payment option
+##### 3. Squad pay modal showing card payment option
 
 ###
 
-![Screenshot 3](assets/img/inline-modal.png)
+![Screenshot 3](assets/images/inline-modal.png)
 
 ### Suggestions / Contributions
 
