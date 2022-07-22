@@ -1,15 +1,27 @@
 <p align="center">
+<<<<<<< HEAD
     <img title="Squad" height="200" src="https://squadco.com/assets/squad_logo.svg" width="50%"/>
+=======
+    <img title="Squad" height="100" src="https://squadco.com/assets/squad_logo.svg" width="50%"/>
+>>>>>>> 6d3eb38af6aba5f56fa98173a80ec409a4d85717
 </p>
 
 # WooCommerce Squad Payment Gateway
 
 - **Contributors:** Squad Developers
+<<<<<<< HEAD
 - **Tags:** squad, woocommerce, payment gateway, bank account, credit card, debit card, nigeria, international, mastercard, visa
+=======
+- **Tags:** squad, woocommerce, payment, payment gateway, bank account, credit card, debit card, nigeria, international, mastercard, visa
+>>>>>>> 6d3eb38af6aba5f56fa98173a80ec409a4d85717
 - **Requires at least:** 4.4
 - **Tested up to:** 5.6.1
 - **Stable tag:** 2.2.6
 - **License:** MIT - see below
+<<<<<<< HEAD
+=======
+- **License URI:**  https://www.gnu.org/licenses/gpl-2.0.html
+>>>>>>> 6d3eb38af6aba5f56fa98173a80ec409a4d85717
 
 Take payments on your store using Squad.
 
@@ -132,4 +144,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+<<<<<<< HEAD
 SOFTWARE.
+=======
+SOFTWARE.
+>>>>>>> 6d3eb38af6aba5f56fa98173a80ec409a4d85717

@@ -19,7 +19,6 @@ jQuery(function ($) {
 
     var $form = $("form#payment-form, form#order_review"),
       public_key = wc_squad_params.public_key,
-      amount = Number(wc_squad_params.amount),
       meta_name = wc_squad_params.meta_name,
       payment_options = wc_squad_params.payment_options,
       currency = wc_squad_params.currency,
