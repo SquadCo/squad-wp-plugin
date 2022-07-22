@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Squad Payments Gateway
+ * Plugin Name: Squad Payment Gateway
  * Plugin URI: http://squadco.com/
  * Author: Squad Developers
  * Author URI: http://squadco.com/
  * Description: Provides Seamless Payments with Debit/Credit Cards.
- * Version: 1.0.5
+ * Version: 1.0.1
  * License: GPL2
  * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
  * text-domain: squad-payments-woo
@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 define( 'WC_SQUAD_MAIN_FILE', __FILE__ );
+define( 'WC_SQUAD_VERSION', '1.0.1' );
 
 if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) return;
 
@@ -38,7 +39,6 @@ function add_to_woo_squad_payment_gateway( $gateways ) {
     $gateways[] = 'WC_Gateway_Squad';
     return $gateways;
 }
-// $P$B5f9dssBqI43PmwvCq0rXZTKzD/5gT1
 
 function sqaud_add_ngn_currencies( $currencies ) {
 	$currencies['NGN'] = __( 'Nigerian Naira', 'squad-payments-woo' );

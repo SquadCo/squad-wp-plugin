@@ -1,15 +1,6 @@
 <?php
 
-/**
- * Squad Payments Gateway.
- *
- * Provides Seamless Payments with Debit/Credit Cards.
- *
- * @class       WC_Gateway_Squad
- * @extends     WC_Payment_Gateway
- * @version     1.0.1
- * @package     WooCommerce/Classes/Payment
- */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -43,6 +34,8 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 
 		$this->public_key = $this->testmode ? $this->test_public_key : $this->live_public_key;
 		$this->secret_key = $this->testmode ? $this->test_secret_key : $this->live_secret_key;
+
+		$this->base_url = $this->testmode == true ? "https://sandbox-developer.squadco.com" : "https://api-d.squadco.com";
 
 
 		$this->webhook_url = $this->get_option( 'webhook_url' );
@@ -86,12 +79,13 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 		$this->subtotal_charge = [];
 		$this->transaction_charge = [];
 		$this->subaccount_ratio = [];
-		$this->base_url = 'https://sqaudco.com';
-		$this->icon = plugins_url('assets/img/rave.png', FLW_WC_PLUGIN_FILE);
+
+		$this->icon = plugins_url('assets/img/squad.png', WC_SQUAD_MAIN_FILE);
 		
 		// declare support for Woocommerce subscription
 		$this->supports = array(
 			'products',
+			'refunds',
 			'tokenization', 
 			'subscriptions',
 			'subscription_cancellation', 
@@ -249,7 +243,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 
 		wp_enqueue_script( 'jquery' );
 
-		wp_enqueue_script( 'squad', 'https://checkout.squadinc.co/widget/squad.min.js', array( 'jquery' ), WC_SQUAD_VERSION, false );
+		wp_enqueue_script( 'squad', "https://checkout.squadco.com/widget/squad.min.js", array( 'jquery' ), WC_SQUAD_VERSION, false );
 
 		//wc_squad--> js key name
 		wp_enqueue_script( 'wc_squad', plugins_url( 'assets/js/squad.js', WC_SQUAD_MAIN_FILE ), array( 'jquery', 'squad' ), WC_SQUAD_VERSION, false );
@@ -326,11 +320,9 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 					$billing_address = esc_html( preg_replace( '#<br\s*/?>#i', ', ', $billing_address ) );
 
 					$shipping_address = $billing_address;
-
 				}
 
 				$squad_params['meta_shipping_address'] = $shipping_address;
-
 			}
 
 			//--> register/add '_squad_txn_ref' variable to the(this) current order
@@ -346,15 +338,14 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 	 * Load admin scripts
 	 */
 	public function admin_scripts() {
-
 		if ( 'woocommerce_page_wc-settings' !== get_current_screen()->id ) {
 			// return;
 		}
 
 		$squad_admin_params = array(
-			'plugin_url' => FLW_WC_ASSET_URL,
+			// 'plugin_url' => FLW_WC_ASSET_URL,
 			'countSubaccount' => $this->get_option( 'subaccount_count_saved' )
-		  );
+		);
 		wp_enqueue_script( 'wc_squad_admin', plugins_url( 'assets/js/squad-admin.js', WC_SQUAD_MAIN_FILE ), array(), WC_SQUAD_VERSION, true );
 	  
 		//post 'squad_admin_params' as 'wc_squad_admin_params' on 'squad-admin.js' page
@@ -398,6 +389,22 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Check if Sqaud merchant details is filled.
+	 */
+	public function admin_notices() {
+
+		if ( $this->enabled == 'no' ) {
+			return;
+		}
+
+		// Check required fields.
+		if ( ! ( $this->public_key && $this->secret_key ) ) {
+			echo '<div class="error"><p>' . sprintf( __( 'Please enter your Sqaud merchant details <a href="%s">here</a> to be able to use the Sqaud WooCommerce plugin.', 'squad-payments-woo' ), admin_url( 'admin.php?page=wc-settings&tab=checkout&section=squad' ) ) . '</p></div>';
+			return;
+		}
+
+	}
 
 	/**
 	 * Check If The Gateway Is Available For Use(enabled).
@@ -419,15 +426,19 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 	 * Display Squad payment icon.
 	 */
 	public function get_icon() {
-		$base_location = wc_get_base_location();
+		// $base_location = wc_get_base_location();
 
-		if ( 'NG' === $base_location['country'] ) {
-			$icon = '<img src="' . WC_HTTPS::force_https_url( plugins_url( 'assets/images/logo.png', WC_SQUAD_MAIN_FILE ) ) . '" alt="Squad Payment Options" />';
-		}else {
-			$icon = '<img src="' . WC_HTTPS::force_https_url( plugins_url( 'assets/images/logo.png', WC_SQUAD_MAIN_FILE ) ) . '" alt="Squad Payment Options" />';
-		}
+		// if ( 'NG' === $base_location['country'] ) {
+		// 	$icon = '<img src="' . WC_HTTPS::force_https_url( plugins_url( 'assets/images/logo.png', WC_SQUAD_MAIN_FILE ) ) . '" alt="Squad Payment Options" />';
+		// }else {
+		// 	$icon = '<img src="' . WC_HTTPS::force_https_url( plugins_url( 'assets/images/logo.png', WC_SQUAD_MAIN_FILE ) ) . '" alt="Squad Payment Options" />';
+		// }
 
-		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
+		// return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
+
+
+		//--> Empty icon for now 
+		return apply_filters( 'woocommerce_gateway_icon', "", $this->id );
 	}
 
 	/**
@@ -471,9 +482,9 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 		}
 
 		@ob_clean();
-		if ( $squad_txn_ref ) {
-			$squad_verify_url =	"https://qa-api.squadinc.co/transaction/verify/${squad_txn_ref}";
-			
+		if ( $squad_txn_ref ) { 
+			$squad_verify_url =	$this->base_url. "/transaction/verify/${squad_txn_ref}";
+
 			$headers = array(
 				'Authorization' => 'Bearer ' . $this->secret_key,
 			);
@@ -485,15 +496,12 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 
 			$request = wp_remote_get( $squad_verify_url, $args );
 			
-			var_dump($request);
-			exit();
-			
 			if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
 
 				$squad_response = json_decode( wp_remote_retrieve_body( $request ) );
 
 				$transStatus = $squad_response->data->transaction_status;
-				$success = $transStatus=="Success"?true:false;
+				$success = $transStatus == "Success" ? true : false;
 
 				if ( $success ) {
 
@@ -643,7 +651,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 			// get product_tags of the current product
 			$current_tags = get_the_terms( $product_id, 'product_tag' );
 			$tags = [];
-			if ( $current_tags && ! is_wp_error( $current_tags ) ) { 
+			if ( $current_tags && ! is_wp_error( $current_tags ) ) {
 
 				foreach ($current_tags as $tag) {
 					$tag_title = $tag->name; // tag name
@@ -800,5 +808,129 @@ class WC_Gateway_Squad extends WC_Payment_Gateway {
 		}
 
 		exit;
+	}
+
+
+	/**
+	 * Checks if WC version is less than passed in version.
+	 *
+	 * @param string $version Version to check against.
+	 *
+	 * @return bool
+	 */
+	public function is_wc_lt( $version ) {
+		return version_compare( WC_VERSION, $version, '<' );
+	}
+	/**
+	 * Process a refund request from the Order details screen.
+	 *
+	 * @param int    $order_id WC Order ID.
+	 * @param null   $amount   WC Order Amount.
+	 * @param string $reason   Refund Reason
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+
+
+		if ( ! ( $this->public_key && $this->secret_key ) ) {
+			return false;
+		}
+
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order ) {
+			return false;
+		}
+
+
+		if ( $this->is_wc_lt( '3.0' ) ) {
+			$order_currency = get_post_meta( $order_id, '_order_currency', true );
+			$transaction_id = get_post_meta( $order_id, '_transaction_id', true );
+		} else {
+			$order_currency = $order->get_currency();
+			$transaction_id = $order->get_transaction_id();
+		}
+
+		var_dump($transaction_id);
+
+		$verify_url =	$this->base_url. "/transaction/verify/${transaction_id}";
+
+		$headers = array(
+			'Authorization' => 'Bearer ' . $this->secret_key,
+			'Content-Type' => 'application/json'
+		);
+
+		$args = array(
+			'headers' => $headers,
+			'timeout' => 60,
+		);
+
+		$request = wp_remote_get( $verify_url, $args );
+
+		if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
+
+			$squad_response = json_decode( wp_remote_retrieve_body( $request ) );
+
+			$transStatus = $squad_response->data->transaction_status;
+			$success = $transStatus == "Success" ? true : false;
+
+			if ( $success ) {
+
+				$merchant_note = sprintf( __( 'Refund for Order ID: #%1$s on %2$s', 'squad-payments-woo' ), $order_id, get_site_url() );
+
+				$body = wp_json_encode(array(
+					// 'transaction'   => $transaction_id,
+					// 'amount'        => $amount * 100,
+					// 'currency'      => $order_currency,
+					// 'customer_note' => $reason,
+					// 'merchant_note' => $merchant_note,
+					'transaction_ref' => $transaction_id,
+					'refund_amount' => $amount * 100,
+				));
+
+				$args['body'] = $body;
+				$refund_url   = $this->base_url. '/transaction/refund';
+
+
+				$refund_request = wp_remote_post( $refund_url, $args );
+
+				if ( ! is_wp_error( $refund_request ) && 200 === wp_remote_retrieve_response_code( $refund_request ) ) {
+
+					$refund_response = json_decode( wp_remote_retrieve_body( $refund_request ) );
+
+					if ( $refund_response->success ) {
+						$amount         = wc_price( $amount, array( 'currency' => $order_currency ) );
+						$refund_id      = $refund_response->data->refund_id ?? "";
+						$refund_message = sprintf( __( 'Refunded %1$s. Refund ID: %2$s. Reason: %3$s', 'squad-payments-woo' ), $amount, $refund_id, $reason );
+						$order->add_order_note( $refund_message );
+
+						return true;
+					}
+
+				} else {
+
+					$refund_response = json_decode( wp_remote_retrieve_body( $refund_request ) );
+
+					if ( isset( $refund_response->message ) ) {
+						return new WP_Error( 'error', $refund_response->message );
+					} else {
+						return new WP_Error( 'error', __( 'Can&#39;t process refund at the moment. Try again later.', 'squad-payments-woo' ) );
+					}
+				}
+
+			}
+
+		}
+
+	}
+
+	public function console_log($output, $with_script_tags = true) {
+		$js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
+	');';
+		if ($with_script_tags) {
+			$js_code = '<script>' . $js_code . '</script>';
+		}
+		echo $js_code;
 	}
 }

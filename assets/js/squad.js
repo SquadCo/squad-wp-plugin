@@ -51,20 +51,19 @@ jQuery(function ($) {
     var amount = Number(wc_squad_params.amount);
 
     var successCallback = function (response) {
-      console.log("----", response);
-      console.log("----", response.transaction_amount);
-      console.log("----", response.transaction_ref);
-      console.log("----", JSON.parse(response));
-      return;
+      let res;
+      try {
+        res = JSON.parse(response);
+      } catch (error) {
+        res = response;
+      }
+      const respTxnref = res.transaction_ref;
 
-      //-----> 4084 0840 8408 4081
-      //append 'squad_txnref' to form
-      //to be picked by 'squad_verify_transaction' function
       $form.append(
         `<input type="hidden" 
 				class="squad_txnref" 
 				name="squad_txnref" 
-				value="${txnref}"/>`
+				value="${respTxnref}"/>`
       );
 
       $("#squad_form a").hide();
@@ -84,9 +83,7 @@ jQuery(function ($) {
       });
     };
     const channels =
-      payment_options.length == 0
-        ? ["card", "transfer", "ussd", "bank"]
-        : payment_options;
+      payment_options.length == 0 ? ["card", "transfer", "ussd", "bank"] : payment_options;
 
     const squadInstance = new squad({
       onClose: () => {
@@ -100,7 +97,7 @@ jQuery(function ($) {
       key: public_key,
       email: email,
       amount: amount,
-      currency: currency,
+      currency_code: currency,
       transaction_ref: txnref,
       paymentChannel: channels,
       metadata: "",
