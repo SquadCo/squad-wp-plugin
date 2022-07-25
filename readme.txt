@@ -1,16 +1,12 @@
 === WooCommerce Squad Payment Gateway ===
 
-<p align="center">
-    <img title="Squad" height="200" src="https://squadco.com/assets/squad_logo.svg" width="50%"/>
-</p>
-
 Contributors: Squad Developers
 Tags: squad, woocommerce, payment, payment gateway, bank account, credit card, debit card, nigeria, international, mastercard, visa
 Requires at least: 4.4
 Tested up to: 5.6.1
 Stable tag: 2.2.6
-License: MIT - see below
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License:   GPLv2
+License URI:   http://www.gnu.org/licenses/gpl-2.0.html
 
 Take payments on your store using Squad.
 
@@ -84,24 +80,3 @@ To configure the plugin, go to **WooCommerce > Settings** from the left menu, cl
 
 To contribute, fork the repo, add your changes and modifications then create a pull request.
 
-== License ==
-
-==== MIT License ===
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
