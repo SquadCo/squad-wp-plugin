@@ -9,7 +9,7 @@
  * Version: 1.0.1
  * License: GPL2
  * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
- * text-domain: squad-payments-woo
+ * text-domain: squad-payment-gateway
  * 
  * Class WC_Gateway_Squad file.
  *
@@ -45,7 +45,7 @@ function add_to_woo_squad_payment_gateway($gateways)
 
 function sqaud_add_ngn_currencies($currencies)
 {
-	$currencies['NGN'] = __('Nigerian Naira', 'squad-payments-woo');
+	$currencies['NGN'] = __('Nigerian Naira', 'squad-payment-gateway');
 	return $currencies;
 }
 
