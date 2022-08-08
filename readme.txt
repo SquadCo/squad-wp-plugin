@@ -84,8 +84,6 @@ To configure the plugin, go to **WooCommerce > Settings** from the left menu, cl
 
 To contribute, fork the repo, add your changes and modifications then create a pull request.
 
-== License ==
-
 ==== MIT License ===
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

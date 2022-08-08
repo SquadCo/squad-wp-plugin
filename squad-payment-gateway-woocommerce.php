@@ -45,7 +45,11 @@ function add_to_woo_squad_payment_gateway($gateways)
 
 function sqaud_add_ngn_currencies($currencies)
 {
+<<<<<<< HEAD
 	$currencies['NGN'] = __('Nigerian Naira', 'squad-payment-gateway');
+=======
+	$currencies['NGN'] = __('Nigerian Naira', 'squad-payments-woo');
+>>>>>>> 8b73acc716b22ced6fecdf2c6bdb442c73624993
 	return $currencies;
 }
 
