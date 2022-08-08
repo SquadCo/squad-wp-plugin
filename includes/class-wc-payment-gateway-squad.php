@@ -865,8 +865,6 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 			$transaction_id = $order->get_transaction_id();
 		}
 
-		var_dump($transaction_id);
-
 		$verify_url =	$this->base_url . "/transaction/verify/${transaction_id}";
 
 		$headers = array(
