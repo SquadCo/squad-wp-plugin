@@ -262,7 +262,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 			$email         	= method_exists($order, 'get_billing_email') ? $order->get_billing_email() : $order->billing_email;
 			$amount        	= $order->get_total() * 100;
 			$txnref        	= 'WOO' . $order_id . 'T' . time(); //gen txnref from order id
-			$txnref    		= filter_var($txnref, FILTER_SANITIZE_STRING); //sanitizr=e this field
+			$txnref    		= sanitize_text_field($txnref); //sanitizr=e this field
 
 			$the_order_id  = method_exists($order, 'get_id') ? $order->get_id() : $order->id;
 			$the_order_key = method_exists($order, 'get_order_key') ? $order->get_order_key() : $order->order_key;
@@ -384,15 +384,15 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		$order = wc_get_order($order_id);
 		// $order = new WC_Order( $order_id );
 
-		echo '<div id="wc-squad-form">';
+		echo esc_html('<div id="wc-squad-form">');
 
-		echo '<p>' . __('Thank you for your order, please click the button below to pay with Squad.', 'squad-payment-gateway') . '</p>';
+		echo esc_html('<p>' . __('Thank you for your order, please click the button below to pay with Squad.', 'squad-payment-gateway') . '</p>');
 
-		echo '<div id="squad_form"><form id="order_review" method="post" action="' . WC()->api_request_url('WC_Gateway_Squad') . '"></form><button class="button" id="squad-payment-button">' . __('Make Payment', 'squad-payment-gateway') . '</button>';
+		echo esc_html('<div id="squad_form"><form id="order_review" method="post" action="' . WC()->api_request_url('WC_Gateway_Squad') . '"></form><button class="button" id="squad-payment-button">' . __('Make Payment', 'squad-payment-gateway') . '</button>');
 
-		echo '  <a class="button cancel" id="squad-cancel-payment-button" href="' . esc_url($order->get_cancel_order_url()) . '">' . __('Cancel order &amp; restore cart', 'squad-payment-gateway') . '</a></div>';
+		echo esc_html('  <a class="button cancel" id="squad-cancel-payment-button" href="' . esc_url($order->get_cancel_order_url()) . '">' . __('Cancel order &amp; restore cart', 'squad-payment-gateway') . '</a></div>');
 
-		echo '</div>';
+		echo esc_html('</div>');
 	}
 
 
@@ -408,7 +408,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 		// Check required fields.
 		if (!($this->public_key && $this->secret_key)) {
-			echo '<div class="error"><p>' . sprintf(__('Please enter your Sqaud merchant details <a href="%s">here</a> to be able to use the Sqaud WooCommerce plugin.', 'squad-payment-gateway'), admin_url('admin.php?page=wc-settings&tab=checkout&section=squad')) . '</p></div>';
+			echo esc_html('<div class="error"><p>' . sprintf(__('Please enter your Sqaud merchant details <a href="%s">here</a> to be able to use the Sqaud WooCommerce plugin.', 'squad-payment-gateway'), admin_url('admin.php?page=wc-settings&tab=checkout&section=squad')) . '</p></div>');
 			return;
 		}
 	}
@@ -517,7 +517,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 				if ($success) {
 
-					$transaction_ref = $squad_response->data->transaction_ref;
+					$transaction_ref = sanitize_text_field($squad_response->data->transaction_ref);
 					$order_details = explode('T', $transaction_ref);
 					$order_id      = (int) str_replace('WOO', '', $order_details[0]);
 
@@ -939,6 +939,6 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		if ($with_script_tags) {
 			$js_code = '<script>' . $js_code . '</script>';
 		}
-		echo $js_code;
+		echo esc_html($js_code);
 	}
 }
