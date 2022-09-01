@@ -1,29 +1,39 @@
 === WooCommerce Squad Payment Gateway ===
 
 <p align="center">
-    <img title="Squad" height="200" src="https://squadco.com/assets/squad_logo.svg" width="50%"/>
+    <img title="Squad" height="200" src="https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/logo.png" width="50%"/>
 </p>
 
 Contributors: Squad Developers
 Tags: squad, woocommerce, payment, payment gateway, bank account, credit card, debit card, nigeria, international, mastercard, visa
 Requires at least: 4.4
-Tested up to: 6.0.1
-Stable tag: 1.0.1
+Tested up to: 6.0.2
+Stable tag: 1.0.2
 License: MIT - see below
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Take payments on your store using Squad.
 
 == Description ==
+Squad helps thousands of businesses in Nigeria to receive secure payments globally. Our goal is to make accepting payments from around the world as easy as possible. Get started by integrating our easy-to-use payment gateway directly on your WooCommerce website to receive local and USD payments quickly and efficiently.
 
-Accept Credit card, Debit card and Bank account payment directly on your store with the Squad payment gateway for WooCommerce.
-Take Credit card payments easily and directly on your store
+Squad enables you to accept payments via multiple methods such as:
+ - Card payments
+ - Bank transfers
+ - USSD
 
-Signup for an account [here](https://dashboard.squadco.com)
+Benefits of using Squad payment gateway
+ - Seamless and easy to use: Squad offers you zero complexities with receiving payments anytime, anywhere. 
+ - Suited for one-time, recurring payments and donations.
+ - Layered with advanced fraud detection to secure your customers’ data.
+ - Offers simplified transactions data retrieval
+ - Offers you periodic intuitive reports to help you understand your customers better
+ - Access to 24/7 dedicated customer support
+Signup for a free Squad account [here](https://dashboard.squadco.com/sign-up )
 
 Squad is available in:
-
-*Nigeria
+ - Nigeria
+ - More markets coming soon.
 
 
 == Installation ==
@@ -32,8 +42,8 @@ Squad is available in:
 
 - Login to your WordPress Dashboard.
 - Click on "Plugins > Add New" from the left menu.
-- In the search box type **Squad Woocommerce Payment Gateway**.
-- Click on **Install Now** on **Squad Woocommerce Payment Gateway** to install the plugin on your site.
+- In the search box type **WooCommerce Squad Payment Gateway**.
+- Click on **Install Now** on **WooCommerce Squad Payment Gateway** to install the plugin on your site.
 - Confirm the installation.
 - Activate the plugin.
 - Click on "WooCommerce > Settings" from the left menu and click the **"Payments"** tab.
@@ -70,15 +80,15 @@ To configure the plugin, go to **WooCommerce > Settings** from the left menu, cl
 
 1. Squad WooCommerce Payment Gateway Setting Page
 
-![Screenshot 1](assets/images/settings.png)
+![Screenshot 1](https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/settings.png)
 
 2. Squad WooCommerce Payment Gateway on woocommerce order checkout page
 
-![Screenshot 2](assets/images/checkout.png)
+![Screenshot 2](https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/checkout.png)
 
 3. Squad pay modal showing card payment option
 
-![Screenshot 3](assets/images/inline-modal.png)
+![Screenshot 3](https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/inline-modal.png)
 
 == Suggestions / Contributions ==
 
