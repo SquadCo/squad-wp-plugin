@@ -80,19 +80,15 @@ To configure the plugin, go to **WooCommerce > Settings** from the left menu, cl
 
 1. Squad WooCommerce Payment Gateway Setting Page
 
-![Screenshot 1](https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/settings.png)
+![Screenshot 1](images/settings.png)
 
 2. Squad WooCommerce Payment Gateway on woocommerce order checkout page
 
-![Screenshot 2](https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/checkout.png)
+![Screenshot 2](images/checkout.png)
 
 3. Squad pay modal showing card payment option
 
-![Screenshot 3](https://github.com/SquadCo/squad-wp-plugin/blob/master/assets/images/inline-modal.png)
-
-== Suggestions / Contributions ==
-
-To contribute, fork the repo, add your changes and modifications then create a pull request.
+![Screenshot 3](images/inline-modal.png)
 
 ==== MIT License ===
 
