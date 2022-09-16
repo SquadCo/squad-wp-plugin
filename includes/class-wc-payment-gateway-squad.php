@@ -56,7 +56,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		 */
 		// add_action( 'woocommerce_api_wc_gateway_squad', array( $this, 'squad_verify_transaction' ) );
 		add_action('woocommerce_api_' . strtolower(get_class($this)), array(&$this, 'squad_verify_transaction'));
-		add_action('woocommerce_api_wc_squad_webhook', array($this, 'process_webhooks'));
+		add_action('woocommerce_api_squad_wc_payment_webhook', array($this, 'process_webhooks'));
 		add_action('woocommerce_thankyou_' . $this->id, array($this, 'thankyou_page'));
 
 		add_action('admin_notices', array($this, 'admin_notices'));
@@ -143,25 +143,25 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 			'test_secret_key'                  => array(
 				'title'       => __('Test Secret Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your Test Secret Key here', 'squad-payment-gateway'),
+				'description' => __('Enter your TEST Secret Key here. Get it on Squad Sandbox', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'test_public_key'                  => array(
 				'title'       => __('Test Public Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your Test Public Key here.', 'squad-payment-gateway'),
+				'description' => __('Enter your TEST Public Key here. Get it on Squad Sandbox', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'live_secret_key'                  => array(
 				'title'       => __('Live Secret Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your Live Secret Key here.', 'squad-payment-gateway'),
+				'description' => __('Enter your LIVE Secret Key here. Get it on Squad Dashboard', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'live_public_key'                  => array(
 				'title'       => __('Live Public Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your Live Public Key here.', 'squad-payment-gateway'),
+				'description' => __('Enter your LIVE Public Key here. Get it on Squad Dashboard', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'autocomplete_order'               => array(
@@ -205,19 +205,46 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 				'default'     => __('Your order will be delivered soon.', 'squad-payment-gateway'),
 				'desc_tip'    => true,
 			),
-			'webhook_url'                  => array(
-				'title'       => __('Webhook url', 'squad-payment-gateway'),
-				'type'        => 'text',
-				'description' => __('Enter a url to submit(post) your order details to after purchase', 'squad-payment-gateway'),
-				'default'     => '',
-				'desc_tip'    => true,
-				'custom_attributes' => array(
-					'data-placeholder' => __('eg. https://example.com', 'squad-payment-gateway'),
-				),
-			),
 		);
 	}
 
+	/**
+	 * Admin Panel Options.
+	 */
+	public function admin_options()
+	{
+
+?>
+
+		<h2><?php _e('Squad', 'squad-payment-gateway'); ?>
+			<?php
+			if (function_exists('wc_back_link')) {
+				wc_back_link(__('Return to payments', 'squad-payment-gateway'), admin_url('admin.php?page=wc-settings&tab=checkout'));
+			}
+			?>
+		</h2>
+
+		<h4>
+			<strong><?php printf(__('Optional: To avoid situations where bad network makes it impossible to verify transactions, set your webhook URL <a href="%1$s" target="_blank" rel="noopener noreferrer">here</a> to the URL below<span style="color: red"><pre><code>%2$s</code></pre></span>', 'squad-payment-gateway'), 'https://dashboard.paystack.co/#/settings/developer', WC()->api_request_url('Squad_WC_Payment_Webhook')); ?></strong>
+		</h4>
+
+		<?php
+
+		// if ($this->is_valid_for_use()) {
+		if (true) {
+
+			echo '<table class="form-table">';
+			$this->generate_settings_html();
+			echo '</table>';
+		} else {
+		?>
+			<div class="inline error">
+				<p><strong><?php _e('Squad Payment Gateway Disabled', 'squad-payment-gateway'); ?></strong>: <?php echo $this->msg; ?></p>
+			</div>
+
+<?php
+		}
+	}
 
 	/** 
 	 * Outputs scripts used for squad payment.
@@ -384,15 +411,15 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		$order = wc_get_order($order_id);
 		// $order = new WC_Order( $order_id );
 
-		echo esc_html('<div id="wc-squad-form">');
+		echo ('<div id="wc-squad-form">');
 
-		echo esc_html('<p>' . __('Thank you for your order, please click the button below to pay with Squad.', 'squad-payment-gateway') . '</p>');
+		echo ('<p>' . __('Thank you for your order, please click the button below to pay with Squad.', 'squad-payment-gateway') . '</p>');
 
-		echo esc_html('<div id="squad_form"><form id="order_review" method="post" action="' . WC()->api_request_url('WC_Gateway_Squad') . '"></form><button class="button" id="squad-payment-button">' . __('Make Payment', 'squad-payment-gateway') . '</button>');
+		echo ('<div id="squad_form"><form id="order_review" method="post" action="' . WC()->api_request_url('WC_Gateway_Squad') . '"></form><button class="button" id="squad-payment-button">' . __('Make Payment', 'squad-payment-gateway') . '</button>');
 
-		echo esc_html('  <a class="button cancel" id="squad-cancel-payment-button" href="' . esc_url($order->get_cancel_order_url()) . '">' . __('Cancel order &amp; restore cart', 'squad-payment-gateway') . '</a></div>');
+		echo ('  <a class="button cancel" id="squad-cancel-payment-button" href="' . esc_url($order->get_cancel_order_url()) . '">' . __('Cancel order &amp; restore cart', 'squad-payment-gateway') . '</a></div>');
 
-		echo esc_html('</div>');
+		echo ('</div>');
 	}
 
 
@@ -729,39 +756,46 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		return $autocomplete_order;
 	}
 
+	private function logToFile($data)
+	{
+		$filename = time() . "-logs.txt";
+		$filename = "98726763276-logs.txt";
+		$fh = fopen($filename, "a");
+		fwrite($fh, "\n");
+		fwrite($fh, $data);
+		fclose($fh);
+	}
 	/**
 	 * Process Webhook
 	 */
 	public function process_webhooks()
 	{
-
-		if ((strtoupper(sanitize_text_field(isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '')) != 'POST') || !array_key_exists('HTTP_X_SQUAD_SIGNATURE', $_SERVER)) {
+		if ((strtoupper(sanitize_text_field(isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '')) != 'POST') || !array_key_exists('HTTP_X_SQUAD_ENCRYPTED_BODY', $_SERVER)) {
 			exit;
 		}
-
 		// Retrieve the request's body
 		$json = @file_get_contents('php://input');
 
+		// $this->logToFile(hash_hmac('sha512', $json, $this->secret_key)); //remove later
 		// validate event do all at once to avoid timing attack
-		if (hash_hmac('sha512', $json, $this->secret_key) !== $_SERVER['HTTP_X_SQUAD_SIGNATURE']) {
+		if (hash_hmac('sha512', $json, $this->secret_key) !== $_SERVER['HTTP_X_SQUAD_ENCRYPTED_BODY']) {
 			exit;
 		}
 
 		$event = json_decode($json);
 
-		if ('charge.success' == $event->event) {
+		if ('charge_successful' == $event->Event) {
 
-			sleep(10);
+			// sleep(10);
 
-			$order_details = explode('_', $event->data->reference);
-
-			$order_id = (int) $order_details[0];
+			$order_details = explode('T', $event->Body->transaction_ref);
+			$order_id      = (int) str_replace('WOO', '', $order_details[0]);
 
 			$order = wc_get_order($order_id);
 
 			$squad_txn_ref = get_post_meta($order_id, '_squad_txn_ref', true);
 
-			if ($event->data->reference != $squad_txn_ref) {
+			if ($event->Body->transaction_ref != $squad_txn_ref) {
 				exit;
 			}
 
@@ -771,19 +805,15 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 				exit;
 			}
 
-			// Log successful transaction to Squad plugin metrics tracker.
-			$squad_logger = new WC_Squad_Plugin_Tracker('squad-payment-gateway', $this->public_key);
-			$squad_logger->log_transaction($event->data->reference);
-
 			$order_currency = method_exists($order, 'get_currency') ? $order->get_currency() : $order->get_order_currency();
 
 			$currency_symbol = get_woocommerce_currency_symbol($order_currency);
 
 			$order_total = $order->get_total();
 
-			$amount_paid = $event->data->amount / 100;
+			$amount_paid = $event->Body->amount / 100;
 
-			$squad_ref = $event->data->reference;
+			$squad_ref = $event->Body->transaction_ref;
 
 			// check if the amount paid is equal to the order amount.
 			if ($amount_paid < $order_total) {
@@ -807,14 +837,18 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 				wc_empty_cart();
 			} else {
-
 				$order->payment_complete($squad_ref);
-				/* translators: %s: transaction reference */
-				$order->add_order_note(sprintf('Squad Transaction Ref: %s', $squad_ref));
 
-				wc_empty_cart();
+				$order->add_order_note(sprintf(__('Payment via Squad successful (Transaction Reference: %s)', 'squad-payment-gateway'), $squad_ref));
+
+				WC()->cart->empty_cart();
+
+				if ($this->is_autocomplete_order_enabled($order)) {
+					$order->update_status('completed');
+				}
 			}
 
+			// $this->save_card_details($event, $order->get_user_id(), $order_id);
 			exit;
 		}
 
@@ -846,6 +880,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	{
 
 
+		$this->logToFile('dsdsdsd');
 		if (!($this->public_key && $this->secret_key)) {
 			return false;
 		}
