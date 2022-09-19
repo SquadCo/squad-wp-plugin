@@ -41,8 +41,8 @@ For Recurring payment, you will need to install the [WooCommerce Subscriptions](
 
 - Login to your WordPress Dashboard.
 - Click on "Plugins > Add New" from the left menu.
-- In the search box type **Squad Woocommerce Payment Gateway**.
-- Click on **Install Now** on **Squad Woocommerce Payment Gateway** to install the plugin on your site.
+- In the search box type **WooCommerce Squad Payment Gateway**.
+- Click on **Install Now** on **WooCommerce Squad Payment Gateway** to install the plugin on your site.
 - Confirm the installation.
 - Activate the plugin.
 - Click on "WooCommerce > Settings" from the left menu and click the **"Payments"** tab.
