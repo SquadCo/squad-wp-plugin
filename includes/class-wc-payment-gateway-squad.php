@@ -143,25 +143,25 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 			'test_secret_key'                  => array(
 				'title'       => __('Test Secret Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your TEST Secret Key here. Get it on Squad Sandbox', 'squad-payment-gateway'),
+				'description' => __('Enter your TEST Secret Key here. Get it on https://sandbox.squadco.com', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'test_public_key'                  => array(
 				'title'       => __('Test Public Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your TEST Public Key here. Get it on Squad Sandbox', 'squad-payment-gateway'),
+				'description' => __('Enter your TEST Public Key here. Get it on https://sandbox.squadco.com', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'live_secret_key'                  => array(
 				'title'       => __('Live Secret Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your LIVE Secret Key here. Get it on Squad Dashboard', 'squad-payment-gateway'),
+				'description' => __('Enter your LIVE Secret Key here. Get it on https://dashboard.squadco.com', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'live_public_key'                  => array(
 				'title'       => __('Live Public Key', 'squad-payment-gateway'),
 				'type'        => 'text',
-				'description' => __('Enter your LIVE Public Key here. Get it on Squad Dashboard', 'squad-payment-gateway'),
+				'description' => __('Enter your LIVE Public Key here. Get it on https://dashboard.squadco.com', 'squad-payment-gateway'),
 				'default'     => '',
 			),
 			'autocomplete_order'               => array(
