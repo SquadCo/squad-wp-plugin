@@ -225,7 +225,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		</h2>
 
 		<h4>
-			<strong><?php printf(__('Optional: To avoid situations where bad network makes it impossible to verify transactions, set your webhook URL <a href="%1$s" target="_blank" rel="noopener noreferrer">here</a> to the URL below<span style="color: red"><pre><code>%2$s</code></pre></span>', 'squad-payment-gateway'), 'https://dashboard.paystack.co/#/settings/developer', WC()->api_request_url('Squad_WC_Payment_Webhook')); ?></strong>
+			<strong><?php printf(__('Optional: To avoid situations where bad network makes it impossible to verify transactions, set your webhook URL <a href="%1$s" target="_blank" rel="noopener noreferrer">here</a> to the URL below<span style="color: red"><pre><code>%2$s</code></pre></span>', 'squad-payment-gateway'), 'https://dashboard.squadco.com/profile/api-webhooks', WC()->api_request_url('Squad_WC_Payment_Webhook')); ?></strong>
 		</h4>
 
 		<?php
@@ -759,7 +759,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	private function logToFile($data)
 	{
 		$filename = time() . "-logs.txt";
-		$filename = "98726763276-logs.txt";
+		$filename = "98726763276-logs.txt"; // remove later
 		$fh = fopen($filename, "a");
 		fwrite($fh, "\n");
 		fwrite($fh, $data);
@@ -776,7 +776,9 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		// Retrieve the request's body
 		$json = @file_get_contents('php://input');
 
-		// $this->logToFile(hash_hmac('sha512', $json, $this->secret_key)); //remove later
+		// $body = trim(str_replace("\n", '', str_replace(' ', '', $json)));
+		// $this->logToFile($body);
+		// $this->logToFile(strtoupper(hash_hmac('sha512', $body, 'sandbox_sk_94f2b798466408ef4d19e848ee1a4d1a3e93f104046f'))); //remove later
 		// validate event do all at once to avoid timing attack
 		if (hash_hmac('sha512', $json, $this->secret_key) !== $_SERVER['HTTP_X_SQUAD_ENCRYPTED_BODY']) {
 			exit;
@@ -786,7 +788,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 		if ('charge_successful' == $event->Event) {
 
-			// sleep(10);
+			sleep(10);
 
 			$order_details = explode('T', $event->Body->transaction_ref);
 			$order_id      = (int) str_replace('WOO', '', $order_details[0]);
