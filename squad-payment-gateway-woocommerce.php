@@ -6,7 +6,7 @@
  * Author: Squad Developers
  * Author URI: http://squadco.com/
  * Description: Provides Seamless Payments with Multiple payment options.
- * Version: 1.0.5
+ * Version: 1.0.6
  * License: GPL2
  * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
  * text-domain: squad-payment-gateway
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 define('WC_SQUAD_MAIN_FILE', __FILE__);
-define('WC_SQUAD_VERSION', '1.0.1');
+define('WC_SQUAD_VERSION', '1.0.6');
 
 if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) return;
 
