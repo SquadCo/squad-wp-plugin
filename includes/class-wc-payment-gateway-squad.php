@@ -275,7 +275,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 		wp_enqueue_script('jquery');
 
-		wp_enqueue_script('squad', "https://checkout.squadco.com/widget/squad.min.js", array('jquery'), WC_SQUAD_VERSION, false);
+		wp_enqueue_script('squad', "https://checkout.squadco.com/widget/squad.min.js?t=" . time(), array('jquery'), WC_SQUAD_VERSION, false);
 
 		//wc_squad--> js key name
 		wp_enqueue_script('wc_squad', plugins_url('assets/js/squad.js', WC_SQUAD_MAIN_FILE), array('jquery', 'squad'), WC_SQUAD_VERSION, false);
