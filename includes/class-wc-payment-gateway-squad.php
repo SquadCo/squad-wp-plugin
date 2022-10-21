@@ -513,7 +513,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	 */
 	public function squad_verify_transaction()
 	{
-
+		sleep(4);
 		if (isset($_REQUEST['squad_txnref'])) {
 			$squad_txn_ref = sanitize_text_field($_REQUEST['squad_txnref']);
 		} else {
