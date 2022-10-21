@@ -513,7 +513,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	 */
 	public function squad_verify_transaction()
 	{
-
+		sleep(4);
 		if (isset($_REQUEST['squad_txnref'])) {
 			$squad_txn_ref = sanitize_text_field($_REQUEST['squad_txnref']);
 		} else {
@@ -620,10 +620,8 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 					WC()->cart->empty_cart();
 				} else {
-
-					$order_details = explode('_', sanitize_text_field($_REQUEST['squad_txnref']));
-
-					$order_id = (int) $order_details[1];
+					$order_details = explode('T', $squad_txn_ref);
+					$order_id      = (int) str_replace('WOO', '', $order_details[0]);
 
 					$order = wc_get_order($order_id);
 
