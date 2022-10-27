@@ -540,7 +540,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 				$squad_response = json_decode(wp_remote_retrieve_body($request));
 
 				$transStatus = $squad_response->data->transaction_status;
-				$success = $transStatus == "Success" ? true : false;
+				$success = strtolower($transStatus) == "success" ? true : false;
 
 				if ($success) {
 
@@ -880,7 +880,6 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	{
 
 
-		$this->logToFile('dsdsdsd');
 		if (!($this->public_key && $this->secret_key)) {
 			return false;
 		}
