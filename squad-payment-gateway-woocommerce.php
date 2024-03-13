@@ -1,13 +1,15 @@
 <?php
 
 /**
- * Plugin Name: Squad Payment Gateway
+ * Plugin Name: Squad WooCommerce Payment Gateway
  * Plugin URI: https://github.com/SquadInc/squad-wp-plugin
  * Author: Squad Developers
  * Author URI: http://squadco.com/
  * Description: Provides Seamless Payments with Multiple payment options.
- * Version: 1.0.8
- * Tested up to: 6.0.2
+ * Version: 1.0.9
+ * WC requires at least: 7.0
+ * WC tested up to: 8.3
+ * Tested up to: 8.3
  * License: GPL2
  * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
  * text-domain: squad-payment-gateway
@@ -21,7 +23,7 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 define('WC_SQUAD_MAIN_FILE', __FILE__);
-define('WC_SQUAD_VERSION', '1.0.6');
+define('WC_SQUAD_VERSION', '1.0.9');
 
 if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) return;
 
@@ -47,6 +49,7 @@ function add_to_woo_squad_payment_gateway($gateways)
 function sqaud_add_ngn_currencies($currencies)
 {
 	$currencies['NGN'] = __('Nigerian Naira', 'squad-payment-gateway');
+	$currencies['USD'] = __('United State Dollar', 'squad-payment-gateway');
 	return $currencies;
 }
 
@@ -59,3 +62,21 @@ function sqaud_add_ngn_currencies_symbol($currency_symbol, $currency)
 	}
 	return $currency_symbol;
 }
+
+
+/**
+ * Registers WooCommerce Blocks integration.
+ */
+function tbz_wc_squad_gateway_woocommerce_block_support() {
+	if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+		require_once __DIR__.'/includes/blocks/class-wc-gateway-squad-blocks-support.php';
+		
+		add_action(
+			'woocommerce_blocks_payment_method_type_registration',
+			static function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+				$payment_method_registry->register( new WC_Gateway_Squad_Blocks_Support() );
+			}
+		);
+	}
+}
+add_action( 'woocommerce_blocks_loaded', 'tbz_wc_squad_gateway_woocommerce_block_support' );

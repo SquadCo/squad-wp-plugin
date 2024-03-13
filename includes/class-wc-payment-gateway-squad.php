@@ -108,7 +108,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	 */
 	public function init_form_fields()
 	{
-		$this->form_fields = array(
+		$form_fields = array(
 			'enabled'                          => array(
 				'title'       => __('Enable/Disable', 'squad-payment-gateway'),
 				'label'       => __('Enable Squad Payment Gateway', 'squad-payment-gateway'),
@@ -206,14 +206,39 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 				'desc_tip'    => true,
 			),
 		);
+
+
+		$this->form_fields = $form_fields;
 	}
+
+
+	/**
+	 * Payment form on checkout page
+	 */
+	public function payment_fields() {
+
+		if ( $this->description ) {
+			echo wpautop( wptexturize( $this->description ) );
+		}
+
+		if ( ! is_ssl() ) {
+			return;
+		}
+
+		if ( $this->supports( 'tokenization' ) && is_checkout() && $this->saved_cards && is_user_logged_in() ) {
+			$this->tokenization_script();
+			$this->saved_payment_methods();
+			$this->save_payment_method_checkbox();
+		}
+
+	}
+
 
 	/**
 	 * Admin Panel Options.
 	 */
 	public function admin_options()
 	{
-
 ?>
 
 		<h2><?php _e('Squad', 'squad-payment-gateway'); ?>
@@ -230,9 +255,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 		<?php
 
-		// if ($this->is_valid_for_use()) {
-		if (true) {
-
+		if ($this->is_valid_for_use()) {
 			echo '<table class="form-table">';
 			$this->generate_settings_html();
 			echo '</table>';
@@ -244,6 +267,25 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 
 <?php
 		}
+	}
+
+
+
+	/**
+	 * Check if this gateway is enabled and available in the user's country.
+	 */
+	public function is_valid_for_use()
+	{
+
+		if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_squad_supported_currencies', array('NGN', 'USD', 'ZAR')))) {
+
+			$this->msg = sprintf(__('Squad does not support your store currency. Kindly set it to either NGN (&#8358), or USD (&#36;) <a href="%s">here</a>', 'squad-payment-gateway'), admin_url('admin.php?page=wc-settings&tab=general'));
+
+			return false;
+
+		}
+		
+		return true;
 	}
 
 	/** 
@@ -272,6 +314,10 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		if ($this->id !== $payment_method) {
 			return;
 		}
+
+		// if ( $this->id !== $order->get_payment_method() ) {
+		// 	return;
+		// }
 
 		wp_enqueue_script('jquery');
 
@@ -395,7 +441,6 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	{
 		$order = wc_get_order($order_id);
 
-
 		return array(
 			'result'   => 'success',
 			'redirect' => $order->get_checkout_payment_url(true),
@@ -462,19 +507,44 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 	 */
 	public function get_icon()
 	{
-		// $base_location = wc_get_base_location();
+		$base_location = wc_get_base_location();
 
-		// if ( 'NG' === $base_location['country'] ) {
-		// 	$icon = '<img src="' . WC_HTTPS::force_https_url( plugins_url( 'assets/images/logo.png', WC_SQUAD_MAIN_FILE ) ) . '" alt="Squad Payment Options" />';
-		// }else {
-		// 	$icon = '<img src="' . WC_HTTPS::force_https_url( plugins_url( 'assets/images/logo.png', WC_SQUAD_MAIN_FILE ) ) . '" alt="Squad Payment Options" />';
-		// }
+		if ('GH' === $base_location['country']) {
+			$icon = '<img src="' . WC_HTTPS::force_https_url(plugins_url('assets/images/squad-gh.png', WC_SQUAD_MAIN_FILE)) . '" alt="Squad Payment Options" />';
+		} elseif ('ZA' === $base_location['country']) {
+			$icon = '<img src="' . WC_HTTPS::force_https_url(plugins_url('assets/images/squad-za.png', WC_SQUAD_MAIN_FILE)) . '" alt="Squad Payment Options" />';
+		} elseif ('KE' === $base_location['country']) {
+			$icon = '<img src="' . WC_HTTPS::force_https_url(plugins_url('assets/images/squad-ke.png', WC_SQUAD_MAIN_FILE)) . '" alt="Squad Payment Options" />';
+		} else {
+			$icon = '<img src="' . WC_HTTPS::force_https_url(plugins_url('assets/images/squad-wc.png', WC_SQUAD_MAIN_FILE)) . '" alt="Squad Payment Options" />';
+		}
 
-		// return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
+		// Override all the icon to the standard squad logo (until we create different logo variants for multiple-countries)
+		$icon = '<img src="' . WC_HTTPS::force_https_url(plugins_url('assets/images/logo.png', WC_SQUAD_MAIN_FILE)) . '" alt="Squad Payment Options" />';
+
+		return apply_filters('woocommerce_gateway_icon', $icon, $this->id);
+	}
 
 
-		//--> Empty icon for now 
-		return apply_filters('woocommerce_gateway_icon', "", $this->id);
+	/**
+	 * Get Squad payment icon URL.
+	 */
+	public function get_logo_url()
+	{
+
+		$base_location = wc_get_base_location();
+
+		if ('GH' === $base_location['country']) {
+			$url = WC_HTTPS::force_https_url(plugins_url('assets/images/sqaud-gh.png', WC_SQUAD_MAIN_FILE));
+		} elseif ('ZA' === $base_location['country']) {
+			$url = WC_HTTPS::force_https_url(plugins_url('assets/images/sqaud-za.png', WC_SQUAD_MAIN_FILE));
+		} elseif ('KE' === $base_location['country']) {
+			$url = WC_HTTPS::force_https_url(plugins_url('assets/images/sqaud-ke.png', WC_SQUAD_MAIN_FILE));
+		} else {
+			$url = WC_HTTPS::force_https_url(plugins_url('assets/images/logo.png', WC_SQUAD_MAIN_FILE));
+		}
+
+		return apply_filters('wc_sqaud_gateway_icon_url', $url, $this->id);
 	}
 
 	/**
