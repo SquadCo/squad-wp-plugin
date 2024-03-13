@@ -82,7 +82,9 @@ jQuery(function ($) {
       });
     };
     const channels =
-      payment_options.length === 0 ? ["card", "transfer", "ussd", "bank"] : payment_options;
+      payment_options.length === 0
+        ? ["card", "transfer", "ussd", "bank"]
+        : payment_options;
 
     const squadInstance = new squad({
       onClose: () => {
