@@ -7,8 +7,9 @@
 Contributors: Squad Developers
 Tags: squad, woocommerce, payment, payment gateway, bank account, credit card, debit card, nigeria, international, mastercard, visa
 Tested up to: 8.3
-Stable tag: 1.0.9
-Requires PHP: 7.0
+Stable tag: 1.0.10
+Requires PHP: 5.8
+Requires at least: 5.8
 License: MIT - see below
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
