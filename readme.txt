@@ -64,6 +64,6 @@ To contribute, fork the repo, add your changes and modifications then create a p
 *   Tweak: Declare compatibility for High Performance Order Storage (HPOS)
 *   Tweak: WooCommerce 8.6 compatibility
 
-= 1.0.10 - Mar 12, 2023 =
+= 1.0.10 - Mar 12, 2024 =
 *   New: Add support for WooCommerce checkout block to custom gateways
 *   Tweak: WooCommerce 8.3 compatibility
