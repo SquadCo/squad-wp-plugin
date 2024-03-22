@@ -1,18 +1,17 @@
 <?php
 
 /**
- * Plugin Name: Squad WooCommerce Payment Gateway
- * Plugin URI: https://github.com/SquadInc/squad-wp-plugin
- * Author: Squad Developers
- * Author URI: http://squadco.com/
- * Description: Provides Seamless Payments with Multiple payment options.
- * Version: 1.0.10
- * WC requires at least: 7.0
- * WC tested up to: 8.3
- * Tested up to: 8.3
- * License: GPL2
- * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
- * text-domain: squad-payment-gateway
+ * Plugin Name: 			Squad WooCommerce Payment Gateway
+ * Plugin URI: 				https://github.com/SquadInc/squad-wp-plugin
+ * Author: 					Squad Developers
+ * Author URI: 				http://squadco.com/
+ * Description: 			Provides Seamless Payments with Multiple payment options.
+ * Version: 				1.0.11
+ * WC requires at least: 	8.0
+ * WC tested up to: 		8.6
+ * License: 				GPL2
+ * License URL: 			http://www.gnu.org/licenses/gpl-2.0.txt
+ * text-domain: 			squad-payment-gateway
  * 
  * Class WC_Gateway_Squad file.
  *
@@ -23,7 +22,7 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 define('WC_SQUAD_MAIN_FILE', __FILE__);
-define('WC_SQUAD_VERSION', '1.0.10');
+define('WC_SQUAD_VERSION', '1.0.11');
 
 if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) return;
 
@@ -63,6 +62,15 @@ function sqaud_add_ngn_currencies_symbol($currency_symbol, $currency)
 	return $currency_symbol;
 }
 
+
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
+);
 
 /**
  * Registers WooCommerce Blocks integration.
