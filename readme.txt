@@ -9,7 +9,7 @@ Tags: squad, woocommerce, payment, payment gateway, bank account, credit card, d
 Requires at least: 5.8
 Requires PHP: 7.4
 Tested up to: 8.3
-Stable tag: 1.0.11
+Stable tag: 1.0.12
 
 License: MIT - see below
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -60,7 +60,7 @@ To contribute, fork the repo, add your changes and modifications then create a p
 
 == Changelog ==
 
-= 1.0.11 - Mar 22, 2024 =
+= 1.0.12 - Mar 22, 2024 =
 *   Tweak: Declare compatibility for High Performance Order Storage (HPOS)
 *   Tweak: WooCommerce 8.3 compatibility
 
