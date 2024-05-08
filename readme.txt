@@ -61,6 +61,8 @@ To contribute, fork the repo, add your changes and modifications then create a p
 == Changelog ==
 
 = 1.0.12 - Mar 22, 2024 =
+*   Improve development experience
+= 1.0.11 - Mar 22, 2024 =
 *   Tweak: Declare compatibility for High Performance Order Storage (HPOS)
 *   Tweak: WooCommerce 8.3 compatibility
 
