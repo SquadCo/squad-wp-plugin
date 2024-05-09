@@ -6,7 +6,7 @@
  * Author: 					Squad Developers
  * Author URI: 				http://squadco.com/
  * Description: 			Provides Seamless Payments with Multiple payment options.
- * Version: 				1.0.11
+ * Version: 				1.0.12
  * WC requires at least: 	8.0
  * WC tested up to: 		8.6
  * License: 				GPL2
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 define('WC_SQUAD_MAIN_FILE', __FILE__);
-define('WC_SQUAD_VERSION', '1.0.11');
+define('WC_SQUAD_VERSION', '1.0.12');
 
 if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) return;
 

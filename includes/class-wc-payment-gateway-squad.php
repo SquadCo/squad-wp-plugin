@@ -37,7 +37,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 		$this->public_key = $this->testmode ? $this->test_public_key : $this->live_public_key;
 		$this->secret_key = $this->testmode ? $this->test_secret_key : $this->live_secret_key;
 
-		$this->base_url = $this->testmode == true ? "https://sandbox-developer.squadco.com" : "https://api-d.squadco.com";
+		$this->base_url = $this->testmode == true ? "https://sandbox-api-d.squadco.com" : "https://api-d.squadco.com";
 
 
 		$this->webhook_url = $this->get_option('webhook_url');
