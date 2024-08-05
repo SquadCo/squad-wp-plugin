@@ -225,7 +225,7 @@ class WC_Gateway_Squad extends WC_Payment_Gateway
 			return;
 		}
 
-		if ( $this->supports( 'tokenization' ) && is_checkout() && $this->saved_cards && is_user_logged_in() ) {
+		if ( $this->supports( 'tokenization' ) && is_checkout() && is_user_logged_in() ) {
 			$this->tokenization_script();
 			$this->saved_payment_methods();
 			$this->save_payment_method_checkbox();

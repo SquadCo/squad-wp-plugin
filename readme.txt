@@ -9,7 +9,7 @@ Tags: squad, woocommerce, payment, payment gateway, bank account, credit card, d
 Requires at least: 5.8
 Requires PHP: 7.4
 Tested up to: 8.3
-Stable tag: 1.0.12
+Stable tag: 1.0.13
 
 License: MIT - see below
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
